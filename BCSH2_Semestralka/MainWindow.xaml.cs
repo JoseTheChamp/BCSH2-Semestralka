@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace BCSH2_Semestralka
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()

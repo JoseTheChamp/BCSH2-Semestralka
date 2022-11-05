@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2_Semestralka\obj\Debug\net6.0-windows\
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\
 BCSH2_Semestralka
 none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
-C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2_Semestralka\App.xaml
-11407045341
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\App.xaml
+21665016223
 
-51723972842
+10887980878
 1941905061893
-MainWindow.xaml;
+MainWindow.xaml;View\AppView.xaml;
 
-False
+True
 

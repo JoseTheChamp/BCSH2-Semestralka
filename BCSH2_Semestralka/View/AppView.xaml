@@ -1,0 +1,63 @@
+﻿<Window x:Class="BCSH2_Semestralka.View.AppView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel = "clr-namespace:BCSH2_Semestralka.ViewModel"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="MiniKotlinInterpreter" Height="450" Width="800"
+        ResizeMode="CanResize">
+    <Grid Margin="10">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2.4*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1" Margin="10,0,0,10">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="File name: "/>
+                <Label Content="{Binding Path = SaveFileName, Mode=OneWay}"/>
+            </StackPanel>
+            <TextBlock Text="{Binding Path = SaveFilePath, Mode=OneWay}" FontSize="10" HorizontalAlignment="Stretch"/>
+            <Button Margin="0,10,0,0" Content="Open file" Command="{Binding OpenFile}"/>
+            <Button Margin="0,10,0,0" Content="Save file" Command="{Binding SaveFile}"/>
+            <Button Margin="0,10,0,0" Content="Save file as" Command="{Binding SaveFileAs}"/>
+            <Button Margin="0,10,0,0" Content="New file" Command="{Binding NewFile}"/>
+            <StackPanel Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Grid Height="23" VerticalAlignment="Top">
+                    <TextBox Text="{Binding TextSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="3,2,13,3" PreviewTextInput="PreviewTextInput" />
+                    <Button FontSize="10" Padding="0,-4,0,0" Content="▲" Width="10" Command="{Binding ChangeSizePlus}" Margin="33,2,1,13" />
+                    <Button FontSize="10" Padding="0,-4,0,0" Content="▼" Width="10" Command="{Binding ChangeSizeMinus}" Margin="33,12,1,3" />
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+        <Button Grid.Column="1" Content="Interpret" Command="{Binding Interpret}" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Height="128" Width="229" FontSize="32" Margin="0,10,0,0"/>
+        <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,10,10">
+            <ScrollViewer>
+                <TextBox 
+                    HorizontalAlignment="Stretch" TextWrapping="Wrap"
+                    Text="{Binding InputText}" VerticalAlignment="Stretch" 
+                    FontSize="{Binding TextSize}" AcceptsReturn="True" IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"/>
+            </ScrollViewer>
+        </Border>
+        <Label Content="Create or load a file." Visibility="{Binding PromptVisible,Mode=OneWay}" Name="createOrLoadLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" Margin="0,10,10,0">
+            <ScrollViewer>
+                <TextBox 
+                    HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+                    Text="{Binding OutputText}" VerticalAlignment="Stretch" 
+                    FontSize="{Binding TextSize, Mode=OneWay}" AcceptsReturn="True" IsReadOnly="true"/>
+            </ScrollViewer>
+        </Border>
+
+
+
+    </Grid>
+</Window>

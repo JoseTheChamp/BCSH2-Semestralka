@@ -12,20 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace BCSH2_Semestralka.View
 {
     /// <summary>
     /// Interaction logic for AppView.xaml
     /// </summary>
-    public partial class AppView : Window
+    public partial class AppView : Window, IScrollable
     {
-        public AppView()
+        public AppView() 
         {
             InitializeComponent();
-            this.DataContext = new BCSH2_Semestralka.ViewModel.AppViewModel();
+            this.DataContext = new BCSH2_Semestralka.ViewModel.AppViewModel(this);
         }
 
+        public void ScrollToEnd()
+        {
+            Debug.WriteLine("SCROLL");
+            this.ScrollableOutput.ScrollToEnd();
+        }
 
         private void PreviewTextInput(object sender, TextCompositionEventArgs e)
         {

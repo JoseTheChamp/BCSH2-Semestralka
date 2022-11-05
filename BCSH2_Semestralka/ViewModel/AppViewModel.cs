@@ -16,8 +16,9 @@ namespace BCSH2_Semestralka.ViewModel
     public class AppViewModel : INotifyPropertyChanged
     {
         private AppModel appModel;
+        private IScrollable scrollableOutput;
 
-        public AppViewModel()
+        public AppViewModel(IScrollable scrollable)
         {
             appModel = new AppModel();
             PromptVisible = "Visible";
@@ -30,6 +31,7 @@ namespace BCSH2_Semestralka.ViewModel
             ChangeSizePlus = new MyICommand(OnChangeSizePlus, CanChangeSizePlus);
             Interpret = new MyICommand(OnInterpret, CanInterpret);
             TextSize = 14;
+            this.scrollableOutput = scrollable;
         }
 
         public string SaveFilePath
@@ -98,6 +100,7 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 outputText = value;
                 RaisePropertyChanged("OutputText");
+                scrollableOutput.ScrollToEnd();
             }
         }
         private void AddLog(string title, string text) {

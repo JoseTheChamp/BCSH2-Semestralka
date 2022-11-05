@@ -49,7 +49,7 @@
         </Border>
         <Label Content="Create or load a file." Visibility="{Binding PromptVisible,Mode=OneWay}" Name="createOrLoadLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" Margin="0,10,10,0">
-            <ScrollViewer>
+            <ScrollViewer x:Name="ScrollableOutput">
                 <TextBox 
                     HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                     Text="{Binding OutputText}" VerticalAlignment="Stretch" 

@@ -6,7 +6,8 @@
         xmlns:viewModel = "clr-namespace:BCSH2_Semestralka.ViewModel"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="MiniKotlinInterpreter" Height="450" Width="800"
+        Title="MiniKotlinInterpreter" Height="550" Width="1200"
+        MinHeight="420" MinWidth="600"
         ResizeMode="CanResize">
     <Grid Margin="10">
 
@@ -16,15 +17,13 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2.4*" />
+            <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="1" Margin="10,0,0,10">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="File name: "/>
-                <Label Content="{Binding Path = SaveFileName, Mode=OneWay}"/>
-            </StackPanel>
+            <Label Content="File name: "/>
+            <Label Content="{Binding Path = SaveFileName, Mode=OneWay}"/>
             <TextBlock Text="{Binding Path = SaveFilePath, Mode=OneWay}" FontSize="10" HorizontalAlignment="Stretch"/>
             <Button Margin="0,10,0,0" Content="Open file" Command="{Binding OpenFile}"/>
             <Button Margin="0,10,0,0" Content="Save file" Command="{Binding SaveFile}"/>
@@ -38,7 +37,10 @@
                 </Grid>
             </StackPanel>
         </StackPanel>
-        <Button Grid.Column="1" Content="Interpret" Command="{Binding Interpret}" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Height="128" Width="229" FontSize="32" Margin="0,10,0,0"/>
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Button  Content="Interpret" Command="{Binding Interpret}" FontSize="22"/>
+        </StackPanel>
+        
         <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,10,10">
             <ScrollViewer>
                 <TextBox 

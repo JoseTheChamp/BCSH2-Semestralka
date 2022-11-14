@@ -29,7 +29,8 @@ namespace BCSH2_Semestralka.ViewModel
             NewFile = new MyICommand(OnNewFile, CanNewFile);
             ChangeSizeMinus = new MyICommand(OnChangeSizeMinus, CanChangeSizeMinus);
             ChangeSizePlus = new MyICommand(OnChangeSizePlus, CanChangeSizePlus);
-            Interpret = new MyICommand(OnInterpret, CanInterpret);
+            Run = new MyICommand(OnRun, CanRun);
+            Compile = new MyICommand(OnCompile, CanCompile);
             TextSize = 14;
             this.scrollableOutput = scrollable;
         }
@@ -232,15 +233,32 @@ namespace BCSH2_Semestralka.ViewModel
 
 
 
-        public MyICommand Interpret { get; set; }
-        private void OnInterpret()
+        public MyICommand Run { get; set; }
+        private void OnRun()
         {
             DateTime time = DateTime.Now;
-            AddLog("Interpret","Starting the interpreting process.");
-            OutputText = OutputText + "\n" + appModel.Interpret(InputText);
-            AddLog("Interpret", "Interpreting is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            AddLog("Run","Starting the compiling process.");
+            OutputText = OutputText + "\n" + appModel.Run(InputText);
+            AddLog("Run", "Compiling is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            AddLog("Run", "Starting the run process.");
+            OutputText = OutputText + "\n" + appModel.Run(InputText);
+            AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
         }
-        private bool CanInterpret()
+        private bool CanRun()
+        {
+            return true;
+        }
+
+
+        public MyICommand Compile { get; set; }
+        private void OnCompile()
+        {
+            DateTime time = DateTime.Now;
+            AddLog("Compile", "Starting the compiling process.");
+            OutputText = OutputText + "\n" + appModel.Compile(InputText);
+            AddLog("Compile", "Compiling is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+        }
+        private bool CanCompile()
         {
             return true;
         }

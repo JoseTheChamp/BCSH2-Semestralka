@@ -40,7 +40,12 @@ namespace BCSH2_Semestralka.Model
             SaveFilePath = filePath;
             Persistence.WriteToFile(filePath, text);
         }
-        public string Interpret(string code) {
+        public string Run(string code) {
+            return "NOT IMPLEMENTED";
+        }
+
+        public string Compile(string code)
+        {
             return "NOT IMPLEMENTED";
         }
 

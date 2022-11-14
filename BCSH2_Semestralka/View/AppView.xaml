@@ -38,7 +38,8 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <Button  Content="Interpret" Command="{Binding Interpret}" FontSize="22"/>
+            <Button  Content="Compile" Command="{Binding Compile}" FontSize="22"/>
+            <Button  Content="Run" Command="{Binding Run}" FontSize="22" Margin="0,15,0,0"/>
         </StackPanel>
         
         <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,10,10">

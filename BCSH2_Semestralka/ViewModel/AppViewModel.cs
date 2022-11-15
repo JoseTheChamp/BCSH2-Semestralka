@@ -105,7 +105,7 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
         private void AddLog(string title, string text) {
-            OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss,mm") + " | " + title + " | " + text;
+            OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss.ff") + " | " + title + " | " + text;
         }
 
 
@@ -231,21 +231,55 @@ namespace BCSH2_Semestralka.ViewModel
             return true;
         }
 
-
-
         public MyICommand Run { get; set; }
         private void OnRun()
         {
             DateTime time = DateTime.Now;
-            AddLog("Run","Starting the compiling process.");
-            OutputText = OutputText + "\n" + appModel.Run(InputText);
-            AddLog("Run", "Compiling is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
-            AddLog("Run", "Starting the run process.");
-            OutputText = OutputText + "\n" + appModel.Run(InputText);
-            AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            if (DoCompile("Run"))
+            {
+                AddLog("Run", "Starting the run process.");
+                try
+                {
+                    appModel.Run();
+                }
+                catch (Exception ex)
+                {
+                    AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString());
+                    return;
+                }
+                AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            }
+            else {
+                AddLog("Run", "Run aborted.");
+            }
         }
         private bool CanRun()
         {
+            return true;
+        }
+
+        private bool DoCompile(string from) {
+            DateTime time = DateTime.Now;
+            AddLog(from, "Starting the compiling process.");
+            try
+            {
+                appModel.Lexicate(InputText);
+            }
+            catch (Exception ex)
+            {
+                AddLog(from, "Lexing has failed. Error msg: " + ex.Message.ToString());
+                return false;
+            }
+            try
+            {
+                appModel.Parse();
+            }
+            catch (Exception ex)
+            {
+                AddLog(from, "Parsing has failed. Error msg: " + ex.Message.ToString());
+                return false;
+            }
+            AddLog(from, "Compiling success. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
             return true;
         }
 
@@ -253,10 +287,7 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Compile { get; set; }
         private void OnCompile()
         {
-            DateTime time = DateTime.Now;
-            AddLog("Compile", "Starting the compiling process.");
-            OutputText = OutputText + "\n" + appModel.Compile(InputText);
-            AddLog("Compile", "Compiling is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            DoCompile("Compile");
         }
         private bool CanCompile()
         {

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BCSH2_Semestralka.Model.ParserClasses;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +12,11 @@ namespace BCSH2_Semestralka.Model
     public class AppModel : INotifyPropertyChanged
     {
         private string saveFilepath;
+
+        private List<Token> tokens;
+        private ProgramAST program;
+        Lexer lexer;
+        Parser parser;
         public string SaveFilePath
         {
             get { return saveFilepath; }
@@ -23,6 +30,9 @@ namespace BCSH2_Semestralka.Model
         public AppModel()
         {
             SaveFilePath = "none";
+            tokens = new List<Token>();
+            lexer = new Lexer();
+            parser = new Parser();
         }
 
 
@@ -40,13 +50,29 @@ namespace BCSH2_Semestralka.Model
             SaveFilePath = filePath;
             Persistence.WriteToFile(filePath, text);
         }
-        public string Run(string code) {
-            return "NOT IMPLEMENTED";
+        public void Run() {
+            program.Run();
         }
 
-        public string Compile(string code)
+        public void Parse() 
         {
-            return "NOT IMPLEMENTED";
+            try
+            {
+                program = parser.Parse(tokens);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR PARSER");
+                throw ex;
+            }
+        }
+
+        public void Lexicate(string s) {
+            tokens = lexer.Lexicate(s);
+        }
+        public void ClearInterpreter() {
+            tokens = null;
+            program = null;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BCSH2_Semestralka.Model
@@ -18,6 +19,7 @@ namespace BCSH2_Semestralka.Model
         Lexer lexer;
         Parser parser;
         public PrintCallBack PrintCallBack { get; set; }
+        public ReadCallBack ReadCallBack { get; set; }
 
         public string SaveFilePath
         {
@@ -60,6 +62,7 @@ namespace BCSH2_Semestralka.Model
         {
             program = parser.Parse(tokens);
             program.PrintCallBack = PrintCallBack;
+            program.ReadCallBack = ReadCallBack;
         }
 
         public void Lexicate(string s) {

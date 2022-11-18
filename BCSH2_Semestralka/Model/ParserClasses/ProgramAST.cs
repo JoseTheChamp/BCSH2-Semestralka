@@ -12,6 +12,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses
     {
         public List<Statement> Statements { get; set; }
         public PrintCallBack PrintCallBack { get; set; }
+        public ReadCallBack ReadCallBack { get; set; }
 
         public ProgramAST()
         {
@@ -22,6 +23,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses
             Debug.WriteLine("RUN in ProgramAST");
             MyExecutionContext executionContext = new MyExecutionContext();
             executionContext.ProgramContext.PrintCallBack = PrintCallBack;
+            executionContext.ProgramContext.ReadCallBack = ReadCallBack;
             foreach (Statement statement in Statements)
             {
                 statement.Execute(executionContext);

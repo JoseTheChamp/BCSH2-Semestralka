@@ -10,18 +10,22 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace BCSH2_Semestralka.ViewModel
 {
-    public class AppViewModel : INotifyPropertyChanged,IClosing
+    public class AppViewModel : INotifyPropertyChanged
     {
         private AppModel appModel;
         private IScrollable scrollableOutput;
+        private char lastAddedCharacterToOutput = 'p';
 
         public AppViewModel(IScrollable scrollable)
         {
             appModel = new AppModel();
             appModel.PrintCallBack = this.AddLogCallBack;
+            appModel.ReadCallBack = this.ReadCallBack;
             PromptVisible = "Visible";
             CodeReadOnly = true;
             OpenFile = new MyICommand(OnOpenFile, CanOpenFile);
@@ -32,7 +36,10 @@ namespace BCSH2_Semestralka.ViewModel
             ChangeSizePlus = new MyICommand(OnChangeSizePlus, CanChangeSizePlus);
             Run = new MyICommand(OnRun, CanRun);
             Compile = new MyICommand(OnCompile, CanCompile);
+            Close = new MyICommand(OnClose, CanClose);
             TextSize = 14;
+            OutputReadOnly = true;
+            saved = true;
             this.scrollableOutput = scrollable;
         }
 
@@ -69,6 +76,17 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
+        private bool saved;
+        public bool Saved
+        {
+            get { return saved; }
+            set
+            {
+                saved = value;
+                RaisePropertyChanged("Saved");
+            }
+        }
+
 
         private string promptVisible;
         public string PromptVisible
@@ -93,6 +111,17 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
+        private bool outputReadOnly;
+        public bool OutputReadOnly
+        {
+            get { return outputReadOnly; }
+            set
+            {
+                outputReadOnly = value;
+                RaisePropertyChanged("OutputReadOnly");
+            }
+        }
+
 
         private string outputText;
         public string OutputText
@@ -100,6 +129,7 @@ namespace BCSH2_Semestralka.ViewModel
             get { return outputText; }
             set
             {
+                lastAddedCharacterToOutput = value[value.Length-1];
                 outputText = value;
                 RaisePropertyChanged("OutputText");
                 scrollableOutput.ScrollToEnd();
@@ -108,10 +138,46 @@ namespace BCSH2_Semestralka.ViewModel
         private void AddLog(string title, string text) {
             OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss.ff") + " | " + title + " | " + text;
         }
-        public void AddLogCallBack(string text) { 
-            OutputText = OutputText + "\n" + text;
+        public void AddLogCallBack(string text) {
+            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText + "\n" + text);
+            //OutputText = OutputText + "\n" + text;
         }
 
+        public string ReadCallBack(string? text) {
+            /*
+            Debug.WriteLine("Zacatek");
+            int delka = 0;
+            Application.Current.Dispatcher.Invoke(() => {
+                OutputText = OutputText + "\n" + text;
+                OutputReadOnly = false;
+                delka = OutputText.Length;
+            });
+            while (lastAddedCharacterToOutput != '\n')
+            {
+
+            }
+            int delkaKonec = OutputText.Length;
+            OutputReadOnly= true;
+            Debug.WriteLine("konec");
+            return OutputText.Substring(delka,delkaKonec-delka);
+            */
+            Debug.WriteLine("Zacatek");
+            if (text != null)
+            {
+                AddLogCallBack(text + ":  ");
+            }
+            OutputReadOnly = false;
+            int delka = OutputText.Length;
+            while (lastAddedCharacterToOutput != '\n')
+            {
+
+            }
+            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
+            int delkaKonec = OutputText.Length;
+            OutputReadOnly = true;
+            Debug.WriteLine("konec");
+            return OutputText.Substring(delka, delkaKonec - delka);
+        }
 
         private string inputText;
         public string InputText
@@ -119,6 +185,7 @@ namespace BCSH2_Semestralka.ViewModel
             get { return inputText; }
             set
             {
+                saved = false;
                 inputText = value;
                 RaisePropertyChanged("InputText");
             }
@@ -130,6 +197,7 @@ namespace BCSH2_Semestralka.ViewModel
         private void OnSaveFile()
         {
             Debug.WriteLine("SAVING");
+            saved= true;
             appModel.SaveFile(InputText);
             AddLog("SaveFile","Code succesfully saved into " + SaveFileName + " | " + SaveFilePath);
         }
@@ -159,6 +227,7 @@ namespace BCSH2_Semestralka.ViewModel
                 SaveFile.RaiseCanExecuteChanged();
                 AddLog("SaveFileAs", "Code succesfully saved into " + SaveFileName + " | " + SaveFilePath);
                 PromptVisible = "Hidden";
+                saved= true;
                 CodeReadOnly = false;
                 if (inputText == null)
                 {
@@ -252,24 +321,30 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Run { get; set; }
         private void OnRun()
         {
-            DateTime time = DateTime.Now;
-            if (DoCompile("Run"))
-            {
-                AddLog("Run", "Starting the run process.");
-                try
+            new Thread(() => {
+                DateTime time = DateTime.Now;
+                if (DoCompile("Run"))
                 {
-                    appModel.Run();
+                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Starting the run process."));
+                    try
+                    {
+                        appModel.Run();
+                    }
+                    catch (Exception ex)
+                    {
+                        //AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString());
+                        Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString()));
+                        return;
+                    }
+                    //AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds."));
                 }
-                catch (Exception ex)
+                else
                 {
-                    AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString());
-                    return;
+                    //AddLog("Run", "Run aborted.");
+                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run aborted."));
                 }
-                AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
-            }
-            else {
-                AddLog("Run", "Run aborted.");
-            }
+            }).Start();
         }
         private bool CanRun()
         {
@@ -278,14 +353,16 @@ namespace BCSH2_Semestralka.ViewModel
 
         private bool DoCompile(string from) {
             DateTime time = DateTime.Now;
-            AddLog(from, "Starting the compiling process.");
+            //AddLog(from, "Starting the compiling process.");
+            Application.Current.Dispatcher.Invoke(() => AddLog(from, "Starting the compiling process."));
             try
             {
                 appModel.Lexicate(InputText);
             }
             catch (Exception ex)
             {
-                AddLog(from, "Lexing has failed. Error msg: " + ex.Message.ToString());
+                //AddLog(from, "Lexing has failed. Error msg: " + ex.Message.ToString());
+                Application.Current.Dispatcher.Invoke(() => AddLog(from, "Lexing has failed. Error msg: " + ex.Message.ToString()));
                 return false;
             }
             try
@@ -294,10 +371,12 @@ namespace BCSH2_Semestralka.ViewModel
             }
             catch (Exception ex)
             {
-                AddLog(from, "Parsing has failed. Error msg: " + ex.Message.ToString());
+                //AddLog(from, "Parsing has failed. Error msg: " + ex.Message.ToString());
+                Application.Current.Dispatcher.Invoke(() => AddLog(from, "Parsing has failed. Error msg: " + ex.Message.ToString()));
                 return false;
             }
-            AddLog(from, "Compiling success. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            //AddLog(from, "Compiling success. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+            Application.Current.Dispatcher.Invoke(() => AddLog(from, "Compiling success. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds."));
             return true;
         }
 
@@ -305,7 +384,9 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Compile { get; set; }
         private void OnCompile()
         {
-            DoCompile("Compile");
+            new Thread(() => {
+                DoCompile("Compile");
+            }).Start();
         }
         private bool CanCompile()
         {
@@ -323,14 +404,14 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
-        public bool OnClosing()
+        public MyICommand Close { get; set; }
+        private void OnClose()
         {
-            bool close = true;
-
-            Debug.WriteLine("CLOSING");
-            //Ask whether to save changes och cancel etc
-            //close = false; //If you want to cancel close
-            return close;
+            Debug.WriteLine("ZAVIRANI");
+        }
+        private bool CanClose()
+        {
+            return true;
         }
     }
 }

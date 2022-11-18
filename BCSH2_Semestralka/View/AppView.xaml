@@ -8,11 +8,10 @@
         mc:Ignorable="d"
         Title="MiniKotlinInterpreter" Height="550" Width="1200"
         MinHeight="420" MinWidth="600"
-        ResizeMode="CanResize">
+        ResizeMode="CanResize"
+        Closing="DataWindow_Closing">
+
     <Grid Margin="10">
-        
-
-
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
@@ -33,7 +32,7 @@
             <Button Margin="0,10,0,0" Content="New file" Command="{Binding NewFile}"/>
             <StackPanel Margin="0,10,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Grid Height="23" VerticalAlignment="Top">
-                    <TextBox Text="{Binding TextSize,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="3,2,13,3" PreviewTextInput="PreviewTextInput" />
+                    <TextBox Text="{Binding TextSize,Mode=TwoWay}" Margin="3,2,13,3" PreviewTextInput="PreviewTextInput" />
                     <Button FontSize="10" Padding="0,-4,0,0" Content="▲" Width="10" Command="{Binding ChangeSizePlus}" Margin="33,2,1,13" />
                     <Button FontSize="10" Padding="0,-4,0,0" Content="▼" Width="10" Command="{Binding ChangeSizeMinus}" Margin="33,12,1,3" />
                 </Grid>
@@ -43,12 +42,12 @@
             <Button  Content="Compile" Command="{Binding Compile}" FontSize="22"/>
             <Button  Content="Run" Command="{Binding Run}" FontSize="22" Margin="0,15,0,0"/>
         </StackPanel>
-        
+
         <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,10,10">
             <ScrollViewer>
                 <TextBox 
                     HorizontalAlignment="Stretch" TextWrapping="Wrap"
-                    Text="{Binding InputText, Mode=TwoWay}" VerticalAlignment="Stretch"  
+                    Text="{Binding InputText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"
                     FontSize="{Binding TextSize}" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"/>
             </ScrollViewer>
         </Border>
@@ -57,12 +56,9 @@
             <ScrollViewer x:Name="ScrollableOutput">
                 <TextBox 
                     HorizontalAlignment="Stretch" TextWrapping="Wrap" 
-                    Text="{Binding OutputText}" VerticalAlignment="Stretch" 
-                    FontSize="{Binding TextSize, Mode=OneWay}" AcceptsReturn="True" IsReadOnly="true"/>
+                    Text="{Binding OutputText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" 
+                    FontSize="{Binding TextSize, Mode=OneWay}" AcceptsReturn="True" IsReadOnly="{Binding OutputReadOnly,Mode=OneWay}"/>
             </ScrollViewer>
         </Border>
-
-
-
     </Grid>
 </Window>

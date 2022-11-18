@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace BCSH2_Semestralka.View
 {
@@ -21,6 +22,9 @@ namespace BCSH2_Semestralka.View
     /// </summary>
     public partial class AppView : Window, IScrollable
     {
+
+        bool isDataDirty = false;
+
         public AppView() 
         {
             InitializeComponent();
@@ -39,13 +43,28 @@ namespace BCSH2_Semestralka.View
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        void DataWindow_Closing(object sender, CancelEventArgs e)
         {
-            IClosing context = this.DataContext as IClosing;
-            if (context != null)
+            /*
+            MessageBox.Show("Closing called");
+            
+            
+            // If data is dirty, notify user and ask for a response
+            if (false)
             {
-                e.Cancel = !context.OnClosing();
-            }
+                string msg = "Data is dirty. Close without saving?";
+                MessageBoxResult result =
+                  MessageBox.Show(
+                    msg,
+                    "Data App",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    // If user doesn't want to close, cancel closure
+                    e.Cancel = true;
+                }
+            }*/
         }
     }
 }

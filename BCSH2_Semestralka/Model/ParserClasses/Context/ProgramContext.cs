@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Text.RegularExpressions;
 using BCSH2_Semestralka.Model.ParserClasses.Context;
 
 namespace BCSH2_Semestralka.Model.ParserClasses.Context
@@ -9,6 +11,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
     {
         public List<Function> Functions { get; set; }
         public PrintCallBack PrintCallBack { get; set; }
+        public ReadCallBack ReadCallBack { get; set; }
 
         public ProgramContext()
         {
@@ -50,15 +53,50 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                 print(Convert.ToString(paramss[0]?.Evaluate(executionContext)));
                 return null;
             }
+            if (ident == "read")
+            {
+                if (paramss.Count < 2)
+                {
+                     return read(Convert.ToString(paramss[0]?.Evaluate(executionContext)));
+                }
+                else {
+                    throw new Exception("Incorrect number of parameters. Should be 1.");
+                }
+            }
             throw new Exception("This method was not defined. [" + ident + "]");
-        }
-
-        public void setPrint(Action<String> printCallBack) { 
-            
         }
 
         private void print(string str) {
             PrintCallBack.Invoke(str);
+        }
+        private object read(string? str) { 
+            string s = ReadCallBack.Invoke(str);
+            double numd = 0;
+            int num = 0;
+            try
+            {
+                double d = Double.Parse(s, CultureInfo.InvariantCulture);
+                if (s.Contains('.'))
+                {
+                    return d;
+                }
+                else
+                {
+                    return Convert.ToInt32(d);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Int32.TryParse(s, out num))
+                {
+                    return num;
+                }
+                else if (s != "\n")
+                {
+                    return s;
+                }
+            }
+            return null;
         }
     }
 }

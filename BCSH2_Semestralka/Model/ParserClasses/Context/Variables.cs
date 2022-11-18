@@ -58,26 +58,18 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                         switch (var.DataType)
                         {
                             case DataType.String:
-                                if (value.GetType() == typeof(string))
-                                {
-                                    var.Value = value;
-                                    return;
-                                }
-                                else {
-                                    throw new Exception("You cannot enter this value into string: " + value.ToString());
-                                }
-                                break;
+                                var.Value = value.ToString();
+                                return;
                             case DataType.Int:
-                                if (value.GetType() == typeof(Int32))
+                                if (value.GetType() == typeof(Int32) || value.GetType() == typeof(double))
                                 {
-                                    var.Value = value;
+                                    var.Value = Convert.ToInt32(value);
                                     return;
                                 }
                                 else
                                 {
                                     throw new Exception("You cannot enter this value into int: " + value.ToString());
                                 }
-                                break;
                             case DataType.Double:
                                 if (value.GetType() == typeof(double))
                                 {
@@ -88,7 +80,6 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                                 {
                                     throw new Exception("You cannot enter this value into Dounle: " + value.ToString());
                                 }
-                                break;
                             default:
                                 throw new Exception("Unexpected exception.");
                         }

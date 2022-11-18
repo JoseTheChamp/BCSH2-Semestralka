@@ -17,6 +17,8 @@ namespace BCSH2_Semestralka.Model
         private ProgramAST program;
         Lexer lexer;
         Parser parser;
+        public PrintCallBack PrintCallBack { get; set; }
+
         public string SaveFilePath
         {
             get { return saveFilepath; }
@@ -56,19 +58,22 @@ namespace BCSH2_Semestralka.Model
 
         public void Parse() 
         {
-            try
-            {
-                program = parser.Parse(tokens);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("ERROR PARSER");
-                throw ex;
-            }
+            program = parser.Parse(tokens);
+            program.PrintCallBack = PrintCallBack;
         }
 
         public void Lexicate(string s) {
             tokens = lexer.Lexicate(s);
+            foreach (Token token in tokens)
+            {
+                if (token.Value != null)
+                {
+                    Debug.WriteLine("Token: L: " + token.Line + "  t: " + token.LineToken + "   " + token.Type + " " + token.Value);
+                }
+                else {
+                    Debug.WriteLine("Token: L: " + token.Line + "  t: " + token.LineToken + "   " + token.Type + " ");
+                }
+            }
         }
         public void ClearInterpreter() {
             tokens = null;

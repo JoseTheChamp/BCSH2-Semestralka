@@ -40,15 +40,9 @@ namespace BCSH2_Semestralka.Model
             index = 0;
             this.tokens = tokens;
             ProgramAST programAST = new ProgramAST();
-            try
+            while (index < tokens.Count)
             {
-                while (true)
-                {
-                    programAST.Statements.Add(ReadStatement());
-                }
-            }
-            catch (Exception ex)
-            {
+                programAST.Statements.Add(ReadStatement());
             }
             return programAST;
         }

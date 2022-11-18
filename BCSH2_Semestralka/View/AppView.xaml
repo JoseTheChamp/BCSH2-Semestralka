@@ -10,6 +10,8 @@
         MinHeight="420" MinWidth="600"
         ResizeMode="CanResize">
     <Grid Margin="10">
+        
+
 
         <Grid.RowDefinitions>
             <RowDefinition Height="2*" />
@@ -46,8 +48,8 @@
             <ScrollViewer>
                 <TextBox 
                     HorizontalAlignment="Stretch" TextWrapping="Wrap"
-                    Text="{Binding InputText}" VerticalAlignment="Stretch" 
-                    FontSize="{Binding TextSize}" AcceptsReturn="True" IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"/>
+                    Text="{Binding InputText, Mode=TwoWay}" VerticalAlignment="Stretch"  
+                    FontSize="{Binding TextSize}" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"/>
             </ScrollViewer>
         </Border>
         <Label Content="Create or load a file." Visibility="{Binding PromptVisible,Mode=OneWay}" Name="createOrLoadLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>

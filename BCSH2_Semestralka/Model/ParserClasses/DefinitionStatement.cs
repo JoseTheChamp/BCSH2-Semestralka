@@ -22,7 +22,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses
         {
             try
             {
-                executionContext.Variables.AddVariable(new Variable(Ident, IsVal, DataType, Value));
+                executionContext.Variables.AddVariable(new Variable(Ident, IsVal, DataType, Value),false);
             }
             catch (Exception ex)
             {

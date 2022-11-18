@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using BCSH2_Semestralka.Model.ParserClasses.Context;
 
 namespace BCSH2_Semestralka.Model.ParserClasses.Context
@@ -7,10 +8,17 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
     public class ProgramContext
     {
         public List<Function> Functions { get; set; }
+        public PrintCallBack PrintCallBack { get; set; }
 
         public ProgramContext()
         {
             Functions = new List<Function>();
+        }
+
+        public ProgramContext(PrintCallBack printCallBack)
+        {
+            Functions = new List<Function>();
+
         }
 
         public ProgramContext(List<Function> functions)
@@ -37,14 +45,20 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
             }
             if (ident == "print")
             {
+                Debug.WriteLine("AAAAAAAAAAAAAAAAAAAAaa)");
+                Debug.WriteLine("Print "  + Convert.ToString(paramss[0]?.Evaluate(executionContext)));
                 print(Convert.ToString(paramss[0]?.Evaluate(executionContext)));
                 return null;
             }
             throw new Exception("This method was not defined. [" + ident + "]");
         }
 
+        public void setPrint(Action<String> printCallBack) { 
+            
+        }
+
         private void print(string str) {
-            Console.WriteLine(str);
+            PrintCallBack.Invoke(str);
         }
     }
 }

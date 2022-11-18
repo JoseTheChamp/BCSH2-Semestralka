@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace BCSH2_Semestralka.ViewModel
 {
-    public class AppViewModel : INotifyPropertyChanged
+    public class AppViewModel : INotifyPropertyChanged,IClosing
     {
         private AppModel appModel;
         private IScrollable scrollableOutput;
@@ -21,6 +21,7 @@ namespace BCSH2_Semestralka.ViewModel
         public AppViewModel(IScrollable scrollable)
         {
             appModel = new AppModel();
+            appModel.PrintCallBack = this.AddLogCallBack;
             PromptVisible = "Visible";
             CodeReadOnly = true;
             OpenFile = new MyICommand(OnOpenFile, CanOpenFile);
@@ -107,6 +108,9 @@ namespace BCSH2_Semestralka.ViewModel
         private void AddLog(string title, string text) {
             OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss.ff") + " | " + title + " | " + text;
         }
+        public void AddLogCallBack(string text) { 
+            OutputText = OutputText + "\n" + text;
+        }
 
 
         private string inputText;
@@ -154,6 +158,14 @@ namespace BCSH2_Semestralka.ViewModel
                 appModel.SaveFileAs(saveFileDialog.FileName,InputText);
                 SaveFile.RaiseCanExecuteChanged();
                 AddLog("SaveFileAs", "Code succesfully saved into " + SaveFileName + " | " + SaveFilePath);
+                PromptVisible = "Hidden";
+                CodeReadOnly = false;
+                if (inputText == null)
+                {
+                    inputText = "";
+                    Compile.RaiseCanExecuteChanged();
+                    Run.RaiseCanExecuteChanged();
+                }      
             }
             else {
                 AddLog("SaveFileAs", "Operation aborted.");
@@ -173,6 +185,10 @@ namespace BCSH2_Semestralka.ViewModel
             InputText = "";
             OutputText = "";
             SaveFile.RaiseCanExecuteChanged();
+            Compile.RaiseCanExecuteChanged();
+            Run.RaiseCanExecuteChanged();
+            PromptVisible = "Hidden";
+            CodeReadOnly = false;
         }
 
         private bool CanNewFile()
@@ -196,6 +212,8 @@ namespace BCSH2_Semestralka.ViewModel
                 CodeReadOnly = false;
                 SaveFile.RaiseCanExecuteChanged();
                 AddLog("OpenFile", "Code succesfully loaded from " + SaveFileName + " | " + SaveFilePath);
+                Compile.RaiseCanExecuteChanged();
+                Run.RaiseCanExecuteChanged();
             }
             else {
                 AddLog("OpenFile", "Operation aborted.");
@@ -255,7 +273,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanRun()
         {
-            return true;
+            return inputText != null;
         }
 
         private bool DoCompile(string from) {
@@ -291,7 +309,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanCompile()
         {
-            return true;
+            return inputText != null;
         }
 
 
@@ -303,6 +321,16 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
+        }
+
+        public bool OnClosing()
+        {
+            bool close = true;
+
+            Debug.WriteLine("CLOSING");
+            //Ask whether to save changes och cancel etc
+            //close = false; //If you want to cancel close
+            return close;
         }
     }
 }

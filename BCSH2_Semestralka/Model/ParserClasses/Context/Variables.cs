@@ -18,12 +18,18 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
         {
             Vars = vars;
         }
-        public void AddVariable(Variable variable) {
-            foreach (var item in Vars)
+        public void AddVariable(Variable variable, bool newContext) {
+            foreach (var item in Vars.ToList())
             {
                 if (item.Ident == variable.Ident)
                 {
-                    throw new Exception("This variable was already defined. [" + variable.Ident + "].");
+                    if (newContext)
+                    {
+                        Vars.Remove(item);
+                    }
+                    else {
+                        throw new Exception("This variable was already defined. [" + variable.Ident + "].");
+                    }
                 }
             }
             Vars.Add(variable);

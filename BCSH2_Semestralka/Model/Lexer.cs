@@ -150,6 +150,7 @@ namespace BCSH2_Semestralka.Model
                     case '"':
                         isReadingString = !isReadingString;
                         tokens.Add(GetToken(Token.TokenType.Quotation));
+                        ReadText();
                         break;
                     case '\n': line++; lineToken = 1; break;
                     case '\r': break;
@@ -171,6 +172,9 @@ namespace BCSH2_Semestralka.Model
                     }
                 }
                 tokens.Add(GetToken(Token.TokenType.StringLit, s));
+                Pop();
+                tokens.Add(GetToken(Token.TokenType.Quotation));
+                isReadingString =false;
             }
             else
             {
@@ -224,7 +228,7 @@ namespace BCSH2_Semestralka.Model
                             tokens.Add(GetToken(Token.TokenType.IntLit, s));
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         if (Int32.TryParse(s, out num))
                         {
@@ -240,7 +244,7 @@ namespace BCSH2_Semestralka.Model
                             }
                             else
                             {
-                                throw new Exception("Truly unexpected.");
+                                throw new Exception("Truly unexpected.1");
                             }
                         }
                     }

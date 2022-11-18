@@ -38,5 +38,14 @@ namespace BCSH2_Semestralka.View
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            IClosing context = this.DataContext as IClosing;
+            if (context != null)
+            {
+                e.Cancel = !context.OnClosing();
+            }
+        }
     }
 }

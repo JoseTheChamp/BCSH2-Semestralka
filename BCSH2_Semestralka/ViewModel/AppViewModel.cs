@@ -322,9 +322,9 @@ namespace BCSH2_Semestralka.ViewModel
         private void OnRun()
         {
             new Thread(() => {
-                DateTime time = DateTime.Now;
                 if (DoCompile("Run"))
                 {
+                    DateTime time = DateTime.Now;
                     Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Starting the run process."));
                     try
                     {

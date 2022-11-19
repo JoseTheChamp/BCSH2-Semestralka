@@ -23,20 +23,19 @@ namespace BCSH2_Semestralka.Model.ParserClasses
 
         public override object? Execute(MyExecutionContext executionContext)
         {
+            //MyExecutionContext innerExecutionContext = (MyExecutionContext)executionContext.Clone();
             if (Convert.ToBoolean(Condition.Evaluate(executionContext)))
             {
-                MyExecutionContext innerExecutionContext = (MyExecutionContext)executionContext.Clone();
                 foreach (Statement statement in Statements)
                 {
-                    object? result = statement.Execute(innerExecutionContext);
+                    object? result = statement.Execute(executionContext);
                     if (result != null) return result;
                 }
             }
             else {
-                MyExecutionContext innerExecutionContext = (MyExecutionContext)executionContext.Clone();
                 foreach (Statement statement in ElseStatements)
                 {
-                    object? result = statement.Execute(innerExecutionContext);
+                    object? result = statement.Execute(executionContext);
                     if (result != null) return result;
                 }
             }

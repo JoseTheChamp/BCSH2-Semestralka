@@ -515,7 +515,9 @@ namespace BCSH2_Semestralka.Model
                             definitionStatement.DataType = DataType.String;
                             definitionStatement.Value = Convert.ToString(((StringExpression)ReadStringExpression()).Value);
                         }
-                        throw new Exception("Specified datatype and value do not match [ReadDefinitionStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
+                        else {
+                            throw new Exception("Specified datatype and value do not match [ReadDefinitionStatement] Line: " + tokens[index - 1].Line + " at token " + tokens[index - 1].LineToken);
+                        }
                         break;
                     default:
                         throw new Exception("Expected stringlit/doublelit/intlit [ReadDefinitionStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);

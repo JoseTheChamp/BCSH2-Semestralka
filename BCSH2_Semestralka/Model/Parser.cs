@@ -52,38 +52,20 @@ namespace BCSH2_Semestralka.Model
             switch (Peek().Type)
             {
                 case Token.TokenType.While: return ReadWhileStatement();
-                case Token.TokenType.Return:
-                    statement = ReadReturnStatement();
-                    if (Peek().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after return statement [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
-                    Pop();
-                    return statement;
+                case Token.TokenType.Return: return ReadReturnStatement();
                 case Token.TokenType.If: return ReadIfStatement();
                 case Token.TokenType.Fun: return ReadFunctionStatement();
-                case Token.TokenType.Var: 
-                    statement = ReadDefinitionStatement();
-                    if (Peek().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after definition statement [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
-                    Pop();
-                    return statement;
-                case Token.TokenType.Val:
-                    statement = ReadDefinitionStatement();
-                    if (Peek().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after definition statement [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
-                    Pop();
-                    return statement;
+                case Token.TokenType.Var: return ReadDefinitionStatement();
+                case Token.TokenType.Val: return ReadDefinitionStatement();
                 default:
                     if (Peek().Type == Token.TokenType.Ident)
                     {
                         if (Peek(1).Type == Token.TokenType.LeftParenthesis)
                         {
-                            statement = ReadCallStatement();
-                            if (Peek().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after call statement [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
-                            Pop();
-                            return statement;
+                            return ReadCallStatement();
                         } else if (Peek(1).Type == Token.TokenType.Equal) {
        
-                            statement = ReadAssignStatement();
-                            if (Peek().Type != Token.TokenType.SemiColon) throw new Exception("Expected ; after call statement [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
-                            Pop();
-                            return statement;
+                            return ReadAssignStatement();
                         }
                         else {
                             throw new Exception("Incorrect start of a statement. [ReadStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);

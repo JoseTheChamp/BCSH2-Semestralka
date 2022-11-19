@@ -129,7 +129,10 @@ namespace BCSH2_Semestralka.ViewModel
             get { return outputText; }
             set
             {
-                lastAddedCharacterToOutput = value[value.Length-1];
+                if (value != "")
+                {
+                    lastAddedCharacterToOutput = value[value.Length - 1];
+                }
                 outputText = value;
                 RaisePropertyChanged("OutputText");
                 scrollableOutput.ScrollToEnd();

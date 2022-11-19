@@ -21,26 +21,39 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
         {
             Vars = vars;
         }
-        public void AddVariable(Variable variable) {
-            foreach (var item in Vars)
-            {
-                if (item.Ident == variable.Ident)
+        public void AddVariable(Variable variable,bool ignore) {
+            if (ignore) {
+                foreach (var item in Vars)
                 {
-                    throw new Exception("This variable was already defined. [" + variable.Ident + "].");
-                }
-            }
-            MyExecutionContext? exec = ExecutionContext.UpperExecutionContext;
-            while (exec != null)
-            {
-                foreach (var item in exec.Variables.Vars) {
                     if (item.Ident == variable.Ident)
                     {
                         throw new Exception("This variable was already defined. [" + variable.Ident + "].");
                     }
                 }
-                exec = exec.UpperExecutionContext;
+                Vars.Add(variable);
             }
-            Vars.Add(variable);
+            else {
+                foreach (var item in Vars)
+                {
+                    if (item.Ident == variable.Ident)
+                    {
+                        throw new Exception("This variable was already defined. [" + variable.Ident + "].");
+                    }
+                }
+                MyExecutionContext? exec = ExecutionContext.UpperExecutionContext;
+                while (exec != null)
+                {
+                    foreach (var item in exec.Variables.Vars)
+                    {
+                        if (item.Ident == variable.Ident)
+                        {
+                            throw new Exception("This variable was already defined. [" + variable.Ident + "].");
+                        }
+                    }
+                    exec = exec.UpperExecutionContext;
+                }
+                Vars.Add(variable);
+            }
         }
 
         public object Get(string ident)

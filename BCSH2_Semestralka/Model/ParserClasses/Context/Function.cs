@@ -36,7 +36,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                     case TypeCode.Int32:
                         if (Parameters[i].DataType == DataType.Int)
                         {
-                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident,false,DataType.Int,Convert.ToInt32(value)),true);
+                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident,false,DataType.Int,Convert.ToInt32(value)));
                         }
                         else {
                             throw new Exception("Function: Parameter datatype does not correspond. Param:" + i + "[Interpreting]");
@@ -45,7 +45,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                     case TypeCode.Double:
                         if (Parameters[i].DataType == DataType.Double)
                         {
-                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident, false, DataType.Double, Convert.ToDouble(value)),true);
+                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident, false, DataType.Double, Convert.ToDouble(value)));
                         }
                         else
                         {
@@ -55,7 +55,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                     case TypeCode.String:
                         if (Parameters[i].DataType == DataType.String)
                         {
-                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident, false, DataType.String, Convert.ToString(value)),true);
+                            innerExecutionContext.Variables.AddVariable(new Variable(Parameters[i].Ident, false, DataType.String, Convert.ToString(value)));
                         }
                         else
                         {

@@ -12,10 +12,12 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
         public List<Function> Functions { get; set; }
         public PrintCallBack PrintCallBack { get; set; }
         public ReadCallBack ReadCallBack { get; set; }
+        public MyExecutionContext ExecutionContext { get; set; }
 
-        public ProgramContext()
+        public ProgramContext(MyExecutionContext executionContext)
         {
             Functions = new List<Function>();
+            ExecutionContext = executionContext;
         }
 
         public ProgramContext(PrintCallBack printCallBack)
@@ -36,6 +38,18 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                     throw new Exception("This function is already defined. [" + function.Ident + "].");
                 }
             }
+            MyExecutionContext? exec = ExecutionContext.UpperExecutionContext;
+            while (exec != null)
+            {
+                foreach (var item in exec.ProgramContext.Functions)
+                {
+                    if (item.Ident == function.Ident)
+                    {
+                        throw new Exception("This function is already defined. [" + function.Ident + "].");
+                    }
+                }
+                exec = exec.UpperExecutionContext;
+            }
             Functions.Add(function);
         }
         public object? Call(string ident, MyExecutionContext executionContext, List<Expression> paramss) {
@@ -45,6 +59,18 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                 {
                     return fun.Execute(executionContext,paramss);  
                 }
+            }
+            MyExecutionContext? exec = executionContext.UpperExecutionContext;
+            while (exec != null)
+            {
+                foreach (Function fun in exec.ProgramContext.Functions)
+                {
+                    if (fun.Ident == ident)
+                    {
+                        return fun.Execute(executionContext, paramss);
+                    }
+                }
+                exec = exec.UpperExecutionContext;
             }
             if (ident == "print")
             {

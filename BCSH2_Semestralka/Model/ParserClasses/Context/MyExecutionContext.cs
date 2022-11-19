@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace BCSH2_Semestralka.Model.ParserClasses.Context
 {
@@ -6,24 +7,24 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
     {
         public ProgramContext ProgramContext { get; set; }
         public Variables Variables { get; set; }
-        //public MyExecutionContext UpperExecutionContext { get; set; }
+        public MyExecutionContext? UpperExecutionContext { get; set; }
 
         public MyExecutionContext()
         {
-            ProgramContext = new ProgramContext();
-            Variables = new Variables();
-            //UpperExecutionContext = new MyExecutionContext();
+            ProgramContext = new ProgramContext(this);
+            Variables = new Variables(this);
+            UpperExecutionContext = null;
         }
 
         public object Clone()
         {
             MyExecutionContext oldExecutionContext = this;
             MyExecutionContext newExecutionContext = new MyExecutionContext();
-            newExecutionContext.ProgramContext = oldExecutionContext.ProgramContext;
-            foreach (Variable variable in oldExecutionContext.Variables.Vars)
-            {
-                newExecutionContext.Variables.Vars.Add((Variable)variable.Clone());
-            }
+            newExecutionContext.UpperExecutionContext = oldExecutionContext;
+            newExecutionContext.ProgramContext = new ProgramContext(newExecutionContext);
+            newExecutionContext.ProgramContext.PrintCallBack = oldExecutionContext.ProgramContext.PrintCallBack;
+            newExecutionContext.ProgramContext.ReadCallBack = oldExecutionContext.ProgramContext.ReadCallBack;
+            newExecutionContext.Variables = new Variables(newExecutionContext);
             return newExecutionContext;
         }
     }

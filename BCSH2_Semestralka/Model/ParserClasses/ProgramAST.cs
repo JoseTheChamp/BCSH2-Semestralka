@@ -28,10 +28,6 @@ namespace BCSH2_Semestralka.Model.ParserClasses
             {
                 statement.Execute(executionContext);
             }
-            foreach (Statement statement in Statements)
-            {
-                Debug.WriteLine(statement.GetType());
-            }
         }
     }
 }

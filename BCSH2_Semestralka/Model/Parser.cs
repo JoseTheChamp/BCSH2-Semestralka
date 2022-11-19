@@ -17,21 +17,21 @@ namespace BCSH2_Semestralka.Model
         private Token Peek() {
             if (index >= tokens.Count)
             {
-                throw new Exception("Unexpected end of file.");
+                throw new Exception("Unexpected end of file.1");
             }
             return tokens[index];
         }
         private Token Peek(int i) {
             if (index + i >= tokens.Count)
             {
-                throw new Exception("Unexpected end of file.");
+                throw new Exception("Unexpected end of file.2");
             }
             return tokens[index + i];
         }
         private Token Pop() {
             if (index >= tokens.Count)
             {
-                throw new Exception("Unexpected end of file.");
+                throw new Exception("Unexpected end of file.3");
             }
             index++;
             return tokens[index - 1];
@@ -42,7 +42,19 @@ namespace BCSH2_Semestralka.Model
             ProgramAST programAST = new ProgramAST();
             while (index < tokens.Count)
             {
-                programAST.Statements.Add(ReadStatement());
+                try
+                {
+                    programAST.Statements.Add(ReadStatement());
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message != "Unexpected end of file.1")
+                    {
+                        throw ex;
+                    }
+                    break;
+                }
+                
             }
             return programAST;
         }

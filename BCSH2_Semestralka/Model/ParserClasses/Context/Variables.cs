@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -76,12 +77,14 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
 
         public void Set(string ident, object value)
         {
+            Debug.WriteLine("Setting " + ident + " to " + value);
             foreach (var var in Vars)
             {
                 if (var.Ident == ident)
                 {
                     if (var.IsVal == false)
                     {
+                        Debug.WriteLine("Type " + var.DataType + "       " + value.GetType());
                         switch (var.DataType)
                         {
                             case DataType.String:
@@ -105,7 +108,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                                 }
                                 else
                                 {
-                                    throw new Exception("You cannot enter this value into Dounle: " + value.ToString());
+                                    throw new Exception("You cannot enter this value into Double: " + value.ToString());
                                 }
                             default:
                                 throw new Exception("Unexpected exception.");

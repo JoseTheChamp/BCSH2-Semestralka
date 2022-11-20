@@ -135,7 +135,7 @@ namespace BCSH2_Semestralka.ViewModel
                 }
                 outputText = value;
                 RaisePropertyChanged("OutputText");
-                scrollableOutput.ScrollToEnd();
+                scrollableOutput.ScrollToEnd(value.Length);
             }
         }
         private void AddLog(string title, string text) {
@@ -147,23 +147,6 @@ namespace BCSH2_Semestralka.ViewModel
         }
 
         public string ReadCallBack(string? text) {
-            /*
-            Debug.WriteLine("Zacatek");
-            int delka = 0;
-            Application.Current.Dispatcher.Invoke(() => {
-                OutputText = OutputText + "\n" + text;
-                OutputReadOnly = false;
-                delka = OutputText.Length;
-            });
-            while (lastAddedCharacterToOutput != '\n')
-            {
-
-            }
-            int delkaKonec = OutputText.Length;
-            OutputReadOnly= true;
-            Debug.WriteLine("konec");
-            return OutputText.Substring(delka,delkaKonec-delka);
-            */
             Debug.WriteLine("Zacatek");
             if (text != null)
             {
@@ -176,8 +159,11 @@ namespace BCSH2_Semestralka.ViewModel
 
             }
             Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
+            //Application.Current.Dispatcher.Invoke(() => scrollableOutput.ScrollToEnd(OutputText.Length));
+            
             int delkaKonec = OutputText.Length;
             OutputReadOnly = true;
+
             Debug.WriteLine("konec");
             return OutputText.Substring(delka, delkaKonec - delka);
         }

@@ -93,7 +93,13 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
         }
 
         private void print(string str) {
-            PrintCallBack.Invoke(str);
+            if (str != null && str != "")
+            {
+                PrintCallBack.Invoke(str);
+            }
+            else {
+                throw new Exception("Print method requires one argument.");
+            }
         }
         private object read(string? str) { 
             string s = ReadCallBack.Invoke(str);

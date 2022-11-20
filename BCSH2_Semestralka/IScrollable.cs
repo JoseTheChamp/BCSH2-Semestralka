@@ -8,6 +8,6 @@ namespace BCSH2_Semestralka
 {
     public interface IScrollable
     {
-        void ScrollToEnd();
+        void ScrollToEnd(int lenght);
     }
 }

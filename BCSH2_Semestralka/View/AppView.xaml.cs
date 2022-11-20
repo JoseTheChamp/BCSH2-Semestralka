@@ -31,10 +31,11 @@ namespace BCSH2_Semestralka.View
             this.DataContext = new BCSH2_Semestralka.ViewModel.AppViewModel(this);
         }
 
-        public void ScrollToEnd()
+        public void ScrollToEnd(int lenght)
         {
             Debug.WriteLine("SCROLL");
             this.ScrollableOutput.ScrollToEnd();
+            this.TextBoxScroll.CaretIndex = lenght;
         }
 
         private void PreviewTextInput(object sender, TextCompositionEventArgs e)

@@ -42,19 +42,7 @@ namespace BCSH2_Semestralka.Model
             ProgramAST programAST = new ProgramAST();
             while (index < tokens.Count)
             {
-                try
-                {
-                    programAST.Statements.Add(ReadStatement());
-                }
-                catch (Exception ex)
-                {
-                    if (ex.Message != "Unexpected end of file.1")
-                    {
-                        throw ex;
-                    }
-                    break;
-                }
-                
+                programAST.Statements.Add(ReadStatement());  
             }
             return programAST;
         }
@@ -125,16 +113,24 @@ namespace BCSH2_Semestralka.Model
             {
                 expression = ReadTerm();
             }
-            while (Peek() != null && (Peek().Type == Token.TokenType.Plus || Peek().Type == Token.TokenType.Minus))
+            try
             {
-                op = Pop().Type;
-                if (op == Token.TokenType.Minus)
+                while (Peek() != null && (Peek().Type == Token.TokenType.Plus || Peek().Type == Token.TokenType.Minus))
                 {
-                    expression = new Minus(line,token,expression,ReadTerm());
+                    op = Pop().Type;
+                    if (op == Token.TokenType.Minus)
+                    {
+                        expression = new Minus(line, token, expression, ReadTerm());
+                    }
+                    else
+                    {
+                        expression = new Plus(line, token, expression, ReadTerm());
+                    }
                 }
-                else
+            }catch(Exception ex) {
+                if (ex.Message != "Unexpected end of file.1")
                 {
-                    expression = new Plus(line, token, expression, ReadTerm());
+                    throw ex;
                 }
             }
             return expression;
@@ -147,21 +143,30 @@ namespace BCSH2_Semestralka.Model
             Expression expression;
             Token.TokenType op;
             expression = ReadFactor();
-            while (Peek() != null && (Peek().Type == Token.TokenType.Multiplication || Peek().Type == Token.TokenType.Division))
+            try
             {
-                op = Pop().Type;
-                if (op == Token.TokenType.Division)
+                while (Peek() != null && (Peek().Type == Token.TokenType.Multiplication || Peek().Type == Token.TokenType.Division))
                 {
-                    expression = new Divide(line,token,expression,ReadFactor());
+                    op = Pop().Type;
+                    if (op == Token.TokenType.Division)
+                    {
+                        expression = new Divide(line, token, expression, ReadFactor());
 
+                    }
+                    else if (op == Token.TokenType.Multiplication)
+                    {
+                        expression = new Multiply(line, token, expression, ReadFactor());
+                    }
+                    else
+                    {
+                        throw new Exception("Expected * or / [ReadTermStatement] Line: " + tokens[index - 1].Line + " at token " + tokens[index - 1].LineToken);
+                    }
                 }
-                else if (op == Token.TokenType.Multiplication)
+            }
+            catch (Exception ex) {
+                if (ex.Message != "Unexpected end of file.1")
                 {
-                    expression = new Multiply(line, token, expression, ReadFactor());
-                }
-                else
-                {
-                    throw new Exception("Expected * or / [ReadTermStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
+                    throw ex;
                 }
             }
             return expression;
@@ -185,10 +190,13 @@ namespace BCSH2_Semestralka.Model
                     case Token.TokenType.IntLit: return ReadIntExpression();
                     case Token.TokenType.Quotation: return ReadStringExpression();
                     case Token.TokenType.Ident:
-                        if (Peek(1).Type == Token.TokenType.LeftParenthesis)
+                        try
                         {
-                            return ReadCallExpression();
-                        }
+                            if (Peek(1).Type == Token.TokenType.LeftParenthesis)
+                            {
+                                return ReadCallExpression();
+                            }
+                        }catch(Exception ex) { }
                         return ReadIdentExpression();
                     default:
                         throw new Exception("Expected ident/StringLit/doubleLit/intLit [ReadFactorStatement] Line: " + tokens[index].Line + " at token " + tokens[index].LineToken);

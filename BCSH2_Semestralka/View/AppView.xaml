@@ -55,8 +55,8 @@
         <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" Margin="0,10,10,0">
             <ScrollViewer x:Name="ScrollableOutput">
                 <TextBox 
-                    HorizontalAlignment="Stretch" TextWrapping="Wrap" 
-                    Text="{Binding OutputText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Stretch" TextWrapping="Wrap" x:Name="TextBoxScroll"
+                    Text="{Binding OutputText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"
                     FontSize="{Binding TextSize, Mode=OneWay}" AcceptsReturn="True" IsReadOnly="{Binding OutputReadOnly,Mode=OneWay}"/>
             </ScrollViewer>
         </Border>

@@ -20,6 +20,7 @@ namespace BCSH2_Semestralka.ViewModel
         private AppModel appModel;
         private IScrollable scrollableOutput;
         private char lastAddedCharacterToOutput = 'p';
+        private bool saved;
 
         public AppViewModel(IScrollable scrollable)
         {
@@ -41,7 +42,52 @@ namespace BCSH2_Semestralka.ViewModel
             OutputReadOnly = true;
             saved = true;
             this.scrollableOutput = scrollable;
+            Application.Current.MainWindow.Closing += new CancelEventHandler(MainWindowClosing);
+
+
+            //open from settings
+            if (Preferences.Default.LastFile != "")
+            {
+                string fileName = Preferences.Default.LastFile;
+                try
+                {
+                    InputText = appModel.LoadFile(fileName);
+                    Debug.WriteLine("Open: " + fileName);
+                    SaveFilePath = fileName;
+                    PromptVisible = "Hidden";
+                    CodeReadOnly = false;
+                    SaveFile.RaiseCanExecuteChanged();
+                    AddLog("OpenFile", "Code succesfully loaded from " + SaveFileName + " | " + SaveFilePath);
+                    Compile.RaiseCanExecuteChanged();
+                    Run.RaiseCanExecuteChanged();
+                    saved = true;
+                }
+                catch (Exception ex)
+                {
+                    appModel.SaveFilePath= "none";
+                }
+            }
         }
+
+        void MainWindowClosing(object sender, CancelEventArgs e) {
+            Debug.WriteLine("ZAVIRANI - ViewModel");
+            if (!saved)
+            {
+                string msg = "You have unsaved changes. Do you want to close without saving?";
+                MessageBoxResult result =
+                  MessageBox.Show(
+                    msg,
+                    "MiniKotlin - Exit",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+
+        }
+
 
         public string SaveFilePath
         {
@@ -69,24 +115,13 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 if (value > 0)
                 {
+                    saved = false;
                     textSize = value;
                     RaisePropertyChanged("TextSize");
                     ChangeSizeMinus.RaiseCanExecuteChanged();
                 }
             }
         }
-
-        private bool saved;
-        public bool Saved
-        {
-            get { return saved; }
-            set
-            {
-                saved = value;
-                RaisePropertyChanged("Saved");
-            }
-        }
-
 
         private string promptVisible;
         public string PromptVisible
@@ -186,9 +221,9 @@ namespace BCSH2_Semestralka.ViewModel
         private void OnSaveFile()
         {
             Debug.WriteLine("SAVING");
-            saved= true;
             appModel.SaveFile(InputText);
             AddLog("SaveFile","Code succesfully saved into " + SaveFileName + " | " + SaveFilePath);
+            saved = true;
         }
 
         private bool CanSaveFile()
@@ -216,14 +251,16 @@ namespace BCSH2_Semestralka.ViewModel
                 SaveFile.RaiseCanExecuteChanged();
                 AddLog("SaveFileAs", "Code succesfully saved into " + SaveFileName + " | " + SaveFilePath);
                 PromptVisible = "Hidden";
-                saved= true;
                 CodeReadOnly = false;
                 if (inputText == null)
                 {
                     inputText = "";
                     Compile.RaiseCanExecuteChanged();
                     Run.RaiseCanExecuteChanged();
-                }      
+                }
+                Preferences.Default.LastFile = saveFileDialog.FileName;
+                Preferences.Default.Save();
+                saved = true;
             }
             else {
                 AddLog("SaveFileAs", "Operation aborted.");
@@ -247,6 +284,7 @@ namespace BCSH2_Semestralka.ViewModel
             Run.RaiseCanExecuteChanged();
             PromptVisible = "Hidden";
             CodeReadOnly = false;
+            saved = true;
         }
 
         private bool CanNewFile()
@@ -272,6 +310,10 @@ namespace BCSH2_Semestralka.ViewModel
                 AddLog("OpenFile", "Code succesfully loaded from " + SaveFileName + " | " + SaveFilePath);
                 Compile.RaiseCanExecuteChanged();
                 Run.RaiseCanExecuteChanged();
+
+                Preferences.Default.LastFile = openFileDialog.FileName;
+                Preferences.Default.Save();
+                saved = true;
             }
             else {
                 AddLog("OpenFile", "Operation aborted.");
@@ -396,7 +438,7 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Close { get; set; }
         private void OnClose()
         {
-            Debug.WriteLine("ZAVIRANI");
+            Debug.WriteLine("ZAVIRANI - ViewModel");
         }
         private bool CanClose()
         {

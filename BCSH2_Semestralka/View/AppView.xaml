@@ -8,8 +8,7 @@
         mc:Ignorable="d"
         Title="MiniKotlinInterpreter" Height="550" Width="1200"
         MinHeight="420" MinWidth="600"
-        ResizeMode="CanResize"
-        Closing="DataWindow_Closing">
+        ResizeMode="CanResize">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

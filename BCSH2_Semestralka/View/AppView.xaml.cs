@@ -46,10 +46,9 @@ namespace BCSH2_Semestralka.View
 
         void DataWindow_Closing(object sender, CancelEventArgs e)
         {
+
             /*
             MessageBox.Show("Closing called");
-            
-            
             // If data is dirty, notify user and ask for a response
             if (false)
             {

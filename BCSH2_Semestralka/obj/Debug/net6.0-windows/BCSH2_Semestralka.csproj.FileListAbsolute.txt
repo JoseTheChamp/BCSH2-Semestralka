@@ -21,3 +21,4 @@ C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\ob
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\BCSH2_Semestralka.pdb
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\BCSH2_Semestralka.genruntimeconfig.cache
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\ref\BCSH2_Semestralka.dll
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\bin\Debug\net6.0-windows\BCSH2_Semestralka.dll.config

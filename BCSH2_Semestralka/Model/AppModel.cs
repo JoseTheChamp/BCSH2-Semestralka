@@ -78,10 +78,6 @@ namespace BCSH2_Semestralka.Model
                 }
             }
         }
-        public void ClearInterpreter() {
-            tokens = null;
-            program = null;
-        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

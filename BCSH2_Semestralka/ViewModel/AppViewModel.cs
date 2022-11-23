@@ -142,6 +142,8 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 isRunning = value;
                 Stop.RaiseCanExecuteChanged();
+                Run.RaiseCanExecuteChanged();
+                Compile.RaiseCanExecuteChanged();
                 RaisePropertyChanged("IsRunning");
             }
         }
@@ -404,7 +406,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanRun()
         {
-            return inputText != null;
+            return inputText != null && isRunning == false;
         }
 
         private bool DoCompile(string from) {
@@ -446,7 +448,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanCompile()
         {
-            return inputText != null;
+            return inputText != null && isRunning == false;
         }
 
         public MyICommand Stop { get; set; }

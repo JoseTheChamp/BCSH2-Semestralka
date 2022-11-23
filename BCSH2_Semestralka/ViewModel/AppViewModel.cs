@@ -21,7 +21,7 @@ namespace BCSH2_Semestralka.ViewModel
         private IScrollable scrollableOutput;
         private char lastAddedCharacterToOutput = 'p';
         private bool saved;
-
+        private Thread runThread;
         public AppViewModel(IScrollable scrollable)
         {
             appModel = new AppModel();
@@ -38,6 +38,7 @@ namespace BCSH2_Semestralka.ViewModel
             Run = new MyICommand(OnRun, CanRun);
             Compile = new MyICommand(OnCompile, CanCompile);
             Close = new MyICommand(OnClose, CanClose);
+            Stop = new MyICommand(OnStop,CanStop);
             TextSize = 14;
             OutputReadOnly = true;
             saved = true;
@@ -134,6 +135,18 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
+        private bool isRunning;
+        public bool IsRunning
+        {
+            get { return isRunning; }
+            set
+            {
+                isRunning = value;
+                Stop.RaiseCanExecuteChanged();
+                RaisePropertyChanged("IsRunning");
+            }
+        }
+
 
         private bool codeReadOnly;
         public bool CodeReadOnly
@@ -185,7 +198,7 @@ namespace BCSH2_Semestralka.ViewModel
             Debug.WriteLine("Zacatek");
             if (text != null)
             {
-                AddLogCallBack(text + ":  ");
+                AddLogCallBack(text);
             }
             OutputReadOnly = false;
             int delka = OutputText.Length;
@@ -193,14 +206,14 @@ namespace BCSH2_Semestralka.ViewModel
             {
 
             }
+
             Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
             //Application.Current.Dispatcher.Invoke(() => scrollableOutput.ScrollToEnd(OutputText.Length));
             
             int delkaKonec = OutputText.Length;
             OutputReadOnly = true;
-
             Debug.WriteLine("konec");
-            return OutputText.Substring(delka, delkaKonec - delka);
+            return OutputText.Substring(delka, delkaKonec - (delka + 1));
         }
 
         private string inputText;
@@ -352,30 +365,43 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Run { get; set; }
         private void OnRun()
         {
-            new Thread(() => {
-                if (DoCompile("Run"))
+            runThread =  new Thread(() => {
+                try
                 {
-                    DateTime time = DateTime.Now;
-                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Starting the run process."));
-                    try
+                    if (DoCompile("Run"))
                     {
-                        appModel.Run();
+                        DateTime time = DateTime.Now;
+                        Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Starting the run process."));
+                        try
+                        {
+                            appModel.Run();
+                        }
+                        catch (ThreadInterruptedException  ex)
+                        {
+                            throw;
+                        }
+                        catch (Exception ex)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString()));
+                            return;
+                        }
+                        //AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
+                        Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds."));
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        //AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString());
-                        Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString()));
-                        return;
+                        //AddLog("Run", "Run aborted.");
+                        Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run aborted."));
                     }
-                    //AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");
-                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds."));
+                    Application.Current.Dispatcher.Invoke(() => IsRunning = false);
                 }
-                else
+                catch (ThreadInterruptedException ex)
                 {
-                    //AddLog("Run", "Run aborted.");
-                    Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run aborted."));
+
                 }
-            }).Start();
+            });
+            IsRunning = true;
+            runThread.Start();
         }
         private bool CanRun()
         {
@@ -422,6 +448,19 @@ namespace BCSH2_Semestralka.ViewModel
         private bool CanCompile()
         {
             return inputText != null;
+        }
+
+        public MyICommand Stop { get; set; }
+        private void OnStop()
+        {
+            runThread.Interrupt();
+            AddLog("Run", "Run aborted.");
+            IsRunning = false;
+            OutputReadOnly = true;
+        }
+        private bool CanStop()
+        {
+            return IsRunning;
         }
 
 

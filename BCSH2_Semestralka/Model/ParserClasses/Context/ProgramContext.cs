@@ -125,6 +125,7 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
                 }
                 else if (s != "\n")
                 {
+                    Debug.WriteLine("[" + s + "]");
                     return s;
                 }
             }

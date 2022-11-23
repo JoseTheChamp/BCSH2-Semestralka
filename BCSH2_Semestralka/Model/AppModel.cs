@@ -67,7 +67,7 @@ namespace BCSH2_Semestralka.Model
 
         public void Lexicate(string s) {
             tokens = lexer.Lexicate(s);
-            foreach (Token token in tokens)
+            /*foreach (Token token in tokens)
             {
                 if (token.Value != null)
                 {
@@ -76,7 +76,7 @@ namespace BCSH2_Semestralka.Model
                 else {
                     Debug.WriteLine("Token: L: " + token.Line + "  t: " + token.LineToken + "   " + token.Type + " ");
                 }
-            }
+            }*/
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -240,6 +240,7 @@ namespace BCSH2_Semestralka.Model
             if (Peek().Type != Token.TokenType.LeftParenthesis) throw new Exception("Expected ( [ReadCallStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);
             Pop();
             CallStatement callStatement = new CallStatement(line,token,ident);
+            int pocet = 0;
             if (Peek().Type != Token.TokenType.RightParenthesis)
             {
                 callStatement.Params.Add(ReadExpression());
@@ -495,7 +496,9 @@ namespace BCSH2_Semestralka.Model
                         if (holder == DataType.Double || holder == null)
                         {
                             definitionStatement.DataType = DataType.Double;
-                            definitionStatement.Value = Convert.ToDouble(Pop().Value);
+                            string strDouble = Pop().Value;
+                            strDouble = strDouble.Replace('.',',');
+                            definitionStatement.Value = Convert.ToDouble(strDouble);
                         }
                         else {
                             throw new Exception("Specified datatype and value do not match [ReadDefinitionStatement] Line: " + tokens[index-1].Line + " at token " + tokens[index-1].LineToken);

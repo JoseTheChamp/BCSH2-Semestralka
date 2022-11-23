@@ -37,7 +37,6 @@ namespace BCSH2_Semestralka.ViewModel
             ChangeSizePlus = new MyICommand(OnChangeSizePlus, CanChangeSizePlus);
             Run = new MyICommand(OnRun, CanRun);
             Compile = new MyICommand(OnCompile, CanCompile);
-            Close = new MyICommand(OnClose, CanClose);
             Stop = new MyICommand(OnStop,CanStop);
             TextSize = 14;
             OutputReadOnly = true;
@@ -472,16 +471,6 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
-        }
-
-        public MyICommand Close { get; set; }
-        private void OnClose()
-        {
-            Debug.WriteLine("ZAVIRANI - ViewModel");
-        }
-        private bool CanClose()
-        {
-            return true;
         }
     }
 }

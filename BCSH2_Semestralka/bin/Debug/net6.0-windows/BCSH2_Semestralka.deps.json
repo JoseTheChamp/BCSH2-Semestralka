@@ -7,8 +7,32 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {
       "BCSH2_Semestralka/1.0.0": {
+        "dependencies": {
+          "AvalonEdit": "6.1.3.50",
+          "System.Windows.Interactivity.WPF": "2.0.20525"
+        },
         "runtime": {
           "BCSH2_Semestralka.dll": {}
+        }
+      },
+      "AvalonEdit/6.1.3.50": {
+        "runtime": {
+          "lib/net6.0-windows7.0/ICSharpCode.AvalonEdit.dll": {
+            "assemblyVersion": "6.1.3.50",
+            "fileVersion": "6.1.3.50"
+          }
+        }
+      },
+      "System.Windows.Interactivity.WPF/2.0.20525": {
+        "runtime": {
+          "lib/net40/Microsoft.Expression.Interactions.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "2.0.20525.0"
+          },
+          "lib/net40/System.Windows.Interactivity.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "2.0.20525.0"
+          }
         }
       }
     }
@@ -18,6 +42,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AvalonEdit/6.1.3.50": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PtR4iPGu965DMSaDs0RyGi1LK94kUwWIZUGx1Jpg5vJr52KKQPR+KMwIthcpgoQR6xJWKM2MkZ41setJXuzMWA==",
+      "path": "avalonedit/6.1.3.50",
+      "hashPath": "avalonedit.6.1.3.50.nupkg.sha512"
+    },
+    "System.Windows.Interactivity.WPF/2.0.20525": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0r+Le4E7hCm4zToUvBzjSUyTcuU3rFeoPa7JyTdWIzR/F7wH6+O/pWkjHIG40hIA0z1wvRdZayvoizA4wcK1dg==",
+      "path": "system.windows.interactivity.wpf/2.0.20525",
+      "hashPath": "system.windows.interactivity.wpf.2.0.20525.nupkg.sha512"
     }
   }
 }

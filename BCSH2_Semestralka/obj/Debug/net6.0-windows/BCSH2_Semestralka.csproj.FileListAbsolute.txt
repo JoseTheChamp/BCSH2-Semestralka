@@ -22,3 +22,8 @@ C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\ob
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\BCSH2_Semestralka.genruntimeconfig.cache
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\ref\BCSH2_Semestralka.dll
 C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\bin\Debug\net6.0-windows\BCSH2_Semestralka.dll.config
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\bin\Debug\net6.0-windows\ICSharpCode.AvalonEdit.dll
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\bin\Debug\net6.0-windows\Microsoft.Expression.Interactions.dll
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\bin\Debug\net6.0-windows\System.Windows.Interactivity.dll
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\BCSH2_Semestralka.csproj.CopyComplete
+C:\Projects\C#\BCSH2_Semestralka\BCSH2Sem\BCSH2-Semestralka\BCSH2_Semestralka\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs

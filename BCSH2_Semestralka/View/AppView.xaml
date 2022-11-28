@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel = "clr-namespace:BCSH2_Semestralka.ViewModel"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+        xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" 
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:controls="clr-namespace:BCSH2_Semestralka"
         mc:Ignorable="d"
         Title="MiniKotlinInterpreter" Height="550" Width="1200"
         MinHeight="420" MinWidth="600"
@@ -44,12 +46,19 @@
         </StackPanel>
 
         <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,10,10">
-            <ScrollViewer>
-                <TextBox 
-                    HorizontalAlignment="Stretch" TextWrapping="Wrap"
-                    Text="{Binding InputText, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"
-                    FontSize="{Binding TextSize}" AcceptsReturn="True" AcceptsTab="True" IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"/>
-            </ScrollViewer>
+            <avalonedit:TextEditor
+                WordWrap="True"
+                ShowLineNumbers="True"
+                LineNumbersForeground="Black"
+                x:Name="textEditor"
+                FontFamily="Consolas"
+                IsReadOnly="{Binding InputReadOnly,Mode=OneWay}"
+                SyntaxHighlighting="XML"
+                FontSize="{Binding TextSize, Mode=OneWay}">
+                <i:Interaction.Behaviors>
+                    <controls:AvalonEditBehaviour GiveMeTheText="{Binding InputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </i:Interaction.Behaviors>
+            </avalonedit:TextEditor>
         </Border>
         <Label Content="Create or load a file." Visibility="{Binding PromptVisible,Mode=OneWay}" Name="createOrLoadLabel" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" Margin="0,10,10,0">

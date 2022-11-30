@@ -51,8 +51,7 @@
                 ShowLineNumbers="True"
                 LineNumbersForeground="Black"
                 x:Name="textEditor"
-                FontFamily="Consolas"
-                IsReadOnly="{Binding InputReadOnly,Mode=OneWay}"
+                IsReadOnly="{Binding CodeReadOnly,Mode=OneWay}"
                 SyntaxHighlighting="XML"
                 FontSize="{Binding TextSize, Mode=OneWay}">
                 <i:Interaction.Behaviors>

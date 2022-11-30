@@ -16,21 +16,22 @@ namespace BCSH2_Semestralka.Model.ParserClasses
         public override object Evaluate(MyExecutionContext executionContext)
         {
             object leftValue = Left.Evaluate(executionContext);
+            object rightValue = Right.Evaluate(executionContext);
             switch (Type.GetTypeCode(leftValue.GetType()))
             {
                 case TypeCode.Int32:
-                    if (Right.Evaluate(executionContext).GetType() == Left.Evaluate(executionContext).GetType())
+                    if (rightValue.GetType() == leftValue.GetType())
                     {
-                        return (int)(Convert.ToInt32(leftValue) * Convert.ToInt32(Right.Evaluate(executionContext)));
+                        return (int)(Convert.ToInt32(leftValue) * Convert.ToInt32(rightValue));
                     }
                     else
                     {
                         throw new Exception("Line: " + Line + "  Token: " + Token + "  Multiplying: both operands must be of the same datatype.[Interpreting]");
                     }
                 case TypeCode.Double:
-                    if (Right.Evaluate(executionContext).GetType() == Left.Evaluate(executionContext).GetType())
+                    if (rightValue.GetType() == leftValue.GetType())
                     {
-                        return Convert.ToDouble(leftValue) * Convert.ToDouble(Right.Evaluate(executionContext));
+                        return Convert.ToDouble(leftValue) * Convert.ToDouble(rightValue);
                     }
                     else
                     {

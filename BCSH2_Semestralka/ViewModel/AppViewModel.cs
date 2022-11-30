@@ -366,7 +366,7 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand Run { get; set; }
         private void OnRun()
         {
-            runThread =  new Thread(() => {
+            runThread = new Thread(() => {
                 try
                 {
                     if (DoCompile("Run"))
@@ -377,13 +377,13 @@ namespace BCSH2_Semestralka.ViewModel
                         {
                             appModel.Run();
                         }
-                        catch (ThreadInterruptedException  ex)
-                        {
-                            throw;
-                        }
                         catch (Exception ex)
                         {
-                            Application.Current.Dispatcher.Invoke(() => AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString()));
+                            Application.Current.Dispatcher.Invoke(() => {
+                                AddLog("Run", "Run failed. Error msg: " + ex.Message.ToString());
+                                IsRunning = false;
+                                OutputReadOnly = true;
+                                });
                             return;
                         }
                         //AddLog("Run", "Run is completed. Time elapsed: " + Convert.ToInt32((DateTime.Now - time).TotalMilliseconds) + " miliseconds.");

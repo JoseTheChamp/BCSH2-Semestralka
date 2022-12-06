@@ -192,7 +192,6 @@ namespace BCSH2_Semestralka.ViewModel
         }
         public void AddLogCallBack(string text) {
             Application.Current.Dispatcher.Invoke(() => OutputText = OutputText + "\n" + text);
-            //OutputText = OutputText + "\n" + text;
         }
 
         public string ReadCallBack(string? text) {
@@ -202,19 +201,18 @@ namespace BCSH2_Semestralka.ViewModel
                 AddLogCallBack(text);
             }
             OutputReadOnly = false;
-            int delka = OutputText.Length;
+            int length = OutputText.Length;
             while (lastAddedCharacterToOutput != '\n')
             {
-
+                Thread.Sleep(1);
             }
 
             Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
-            //Application.Current.Dispatcher.Invoke(() => scrollableOutput.ScrollToEnd(OutputText.Length));
             
-            int delkaKonec = OutputText.Length;
+            int lenghtEnd = OutputText.Length;
             OutputReadOnly = true;
             Debug.WriteLine("konec");
-            return OutputText.Substring(delka, delkaKonec - (delka + 1));
+            return OutputText.Substring(length, lenghtEnd - (length + 1));
         }
 
         private string inputText;
@@ -243,10 +241,7 @@ namespace BCSH2_Semestralka.ViewModel
         private bool CanSaveFile()
         {
             Debug.WriteLine("CAN SAVE");
-            if (SaveFilePath != "none")
-            {
-                return true;
-            }
+            if (SaveFilePath != "none") return true;
             return false;
         }
 
@@ -403,7 +398,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanRun()
         {
-            return inputText != null && isRunning == false;
+            return inputText != null && !isRunning;
         }
 
         private bool DoCompile(string from) {
@@ -445,7 +440,7 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanCompile()
         {
-            return inputText != null && isRunning == false;
+            return inputText != null && !isRunning;
         }
 
         public MyICommand Stop { get; set; }
@@ -460,8 +455,6 @@ namespace BCSH2_Semestralka.ViewModel
         {
             return IsRunning;
         }
-
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void RaisePropertyChanged(string property)

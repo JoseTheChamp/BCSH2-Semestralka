@@ -16,12 +16,13 @@ namespace BCSH2_Semestralka.Model.ParserClasses
         public override object Evaluate(MyExecutionContext executionContext)
         {
             object leftValue = Left.Evaluate(executionContext);
+            object rightValue = Right.Evaluate(executionContext);
             switch (Type.GetTypeCode(leftValue.GetType()))
             {
                 case TypeCode.Int32:
-                    if (Right.Evaluate(executionContext).GetType() == Left.Evaluate(executionContext).GetType())
+                    if (rightValue.GetType() == leftValue.GetType())
                     {
-                        if(Convert.ToInt32(leftValue) == Convert.ToInt32(Right.Evaluate(executionContext))) return true;
+                        if(Convert.ToInt32(leftValue) == Convert.ToInt32(rightValue)) return true;
                         return false;
                     }
                     else
@@ -29,9 +30,9 @@ namespace BCSH2_Semestralka.Model.ParserClasses
                         throw new Exception("Line: " + Line + "  Token: " + Token + "  EqualCond: both operands must be of the same datatype.[Interpreting]");
                     }
                 case TypeCode.Double:
-                    if (Right.Evaluate(executionContext).GetType() == Left.Evaluate(executionContext).GetType())
+                    if (rightValue.GetType() == leftValue.GetType())
                     {
-                        if (Convert.ToDouble(leftValue) == Convert.ToDouble(Right.Evaluate(executionContext))) return true;
+                        if (Convert.ToDouble(leftValue) == Convert.ToDouble(rightValue)) return true;
                         return false;
                     }
                     else
@@ -39,9 +40,9 @@ namespace BCSH2_Semestralka.Model.ParserClasses
                         throw new Exception("Line: " + Line + "  Token: " + Token + "  EqualCond: both operands must be of the same datatype.[Interpreting]");
                     }
                 case TypeCode.String:
-                    if (Right.Evaluate(executionContext).GetType() == Left.Evaluate(executionContext).GetType())
+                    if (rightValue.GetType() == leftValue.GetType())
                     {
-                        if (Convert.ToString(leftValue) == Convert.ToString(Right.Evaluate(executionContext))) return true;
+                        if (Convert.ToString(leftValue) == Convert.ToString(rightValue)) return true;
                         return false;
                     }
                     else

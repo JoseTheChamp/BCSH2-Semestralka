@@ -69,25 +69,8 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
-        void MainWindowClosing(object sender, CancelEventArgs e) {
-            Debug.WriteLine("ZAVIRANI - ViewModel");
-            if (!saved)
-            {
-                string msg = "You have unsaved changes. Do you want to close without saving?";
-                MessageBoxResult result =
-                  MessageBox.Show(
-                    msg,
-                    "MiniKotlin - Exit",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning);
-                if (result == MessageBoxResult.No)
-                {
-                    e.Cancel = true;
-                }
-            }
 
-        }
-
+        #region Properties
 
         public string SaveFilePath
         {
@@ -115,7 +98,6 @@ namespace BCSH2_Semestralka.ViewModel
             {
                 if (value > 0)
                 {
-                    saved = false;
                     textSize = value;
                     RaisePropertyChanged("TextSize");
                     ChangeSizeMinus.RaiseCanExecuteChanged();
@@ -187,33 +169,6 @@ namespace BCSH2_Semestralka.ViewModel
                 scrollableOutput.ScrollToEnd(value.Length);
             }
         }
-        private void AddLog(string title, string text) {
-            OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss.ff") + " | " + title + " | " + text;
-        }
-        public void AddLogCallBack(string text) {
-            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText + "\n" + text);
-        }
-
-        public string ReadCallBack(string? text) {
-            Debug.WriteLine("Zacatek");
-            if (text != null)
-            {
-                AddLogCallBack(text);
-            }
-            OutputReadOnly = false;
-            int length = OutputText.Length;
-            while (lastAddedCharacterToOutput != '\n')
-            {
-                Thread.Sleep(1);
-            }
-
-            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
-            
-            int lenghtEnd = OutputText.Length;
-            OutputReadOnly = true;
-            Debug.WriteLine("konec");
-            return OutputText.Substring(length, lenghtEnd - (length + 1));
-        }
 
         private string inputText;
         public string InputText
@@ -227,9 +182,11 @@ namespace BCSH2_Semestralka.ViewModel
             }
         }
 
+        #endregion Properties
 
+        #region Commands
 
-        public MyICommand SaveFile { get; set; }
+        public MyICommand SaveFile { get; set; } 
         private void OnSaveFile()
         {
             Debug.WriteLine("SAVING");
@@ -244,7 +201,6 @@ namespace BCSH2_Semestralka.ViewModel
             if (SaveFilePath != "none") return true;
             return false;
         }
-
 
         public MyICommand SaveFileAs { get; set; }
         private void OnSaveFileAs()
@@ -281,7 +237,6 @@ namespace BCSH2_Semestralka.ViewModel
             return true;
         }
 
-
         public MyICommand NewFile { get; set; }
         private void OnNewFile()
         {
@@ -300,7 +255,6 @@ namespace BCSH2_Semestralka.ViewModel
         {
             return true;
         }
-
 
         public MyICommand OpenFile { get; set; }
         private void OnOpenFile()
@@ -337,7 +291,7 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand ChangeSizeMinus { get; set; }
         private void OnChangeSizeMinus()
         {
-            TextSize = TextSize - 1;
+            TextSize--;
         }
         private bool CanChangeSizeMinus()
         {
@@ -348,7 +302,7 @@ namespace BCSH2_Semestralka.ViewModel
         public MyICommand ChangeSizePlus { get; set; }
         private void OnChangeSizePlus()
         {
-            TextSize = TextSize + 1;
+            TextSize++;
         }
         private bool CanChangeSizePlus()
         {
@@ -401,6 +355,67 @@ namespace BCSH2_Semestralka.ViewModel
             return inputText != null && !isRunning;
         }
 
+        public MyICommand Compile { get; set; }
+        private void OnCompile()
+        {
+            new Thread(() => {
+                DoCompile("Compile");
+            }).Start();
+        }
+        private bool CanCompile()
+        {
+            return inputText != null && !isRunning;
+        }
+
+        public MyICommand Stop { get; set; }
+        private void OnStop()
+        {
+            runThread.Interrupt();
+            AddLog("Run", "Run aborted.");
+            IsRunning = false;
+            OutputReadOnly = true;
+        }
+        private bool CanStop()
+        {
+            return IsRunning;
+        }
+
+        #endregion Commands
+
+        #region OtherCode
+
+        private void AddLog(string title, string text)
+        {
+            OutputText = OutputText + "\n--- LOG: " + DateTime.Now.ToString("HH:mm:ss.ff") + " | " + title + " | " + text;
+        }
+        public void AddLogCallBack(string text)
+        {
+            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText + "\n" + text);
+        }
+
+        public string ReadCallBack(string? text)
+        {
+            Debug.WriteLine("Zacatek");
+            if (text != null)
+            {
+                AddLogCallBack(text);
+            }
+            OutputReadOnly = false;
+            int length = OutputText.Length;
+            while (lastAddedCharacterToOutput != '\n')
+            {
+                Thread.Sleep(1);
+            }
+
+            Application.Current.Dispatcher.Invoke(() => OutputText = OutputText.TrimEnd('\n'));
+
+            int lenghtEnd = OutputText.Length;
+            OutputReadOnly = true;
+            Debug.WriteLine("konec");
+            return OutputText.Substring(length, lenghtEnd - (length + 1));
+        }
+
+
         private bool DoCompile(string from) {
             DateTime time = DateTime.Now;
             //AddLog(from, "Starting the compiling process.");
@@ -430,32 +445,6 @@ namespace BCSH2_Semestralka.ViewModel
             return true;
         }
 
-
-        public MyICommand Compile { get; set; }
-        private void OnCompile()
-        {
-            new Thread(() => {
-                DoCompile("Compile");
-            }).Start();
-        }
-        private bool CanCompile()
-        {
-            return inputText != null && !isRunning;
-        }
-
-        public MyICommand Stop { get; set; }
-        private void OnStop()
-        {
-            runThread.Interrupt();
-            AddLog("Run", "Run aborted.");
-            IsRunning = false;
-            OutputReadOnly = true;
-        }
-        private bool CanStop()
-        {
-            return IsRunning;
-        }
-
         public event PropertyChangedEventHandler? PropertyChanged;
         private void RaisePropertyChanged(string property)
         {
@@ -464,5 +453,27 @@ namespace BCSH2_Semestralka.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
             }
         }
+
+        void MainWindowClosing(object sender, CancelEventArgs e)
+        {
+            Debug.WriteLine("ZAVIRANI - ViewModel");
+            if (!saved)
+            {
+                string msg = "You have unsaved changes. Do you want to close without saving?";
+                MessageBoxResult result =
+                  MessageBox.Show(
+                    msg,
+                    "MiniKotlin - Exit",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        #endregion OtherCode
+
     }
 }

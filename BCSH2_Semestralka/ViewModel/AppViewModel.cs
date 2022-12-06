@@ -346,11 +346,8 @@ namespace BCSH2_Semestralka.ViewModel
         }
         private bool CanChangeSizeMinus()
         {
-            if (TextSize < 2)
-            {
-                return false;
-            }
-            return true;
+            return TextSize >= 2;
+
         }
 
         public MyICommand ChangeSizePlus { get; set; }

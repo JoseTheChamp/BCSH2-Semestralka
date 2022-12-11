@@ -75,8 +75,9 @@ namespace BCSH2_Semestralka.Model.ParserClasses.Context
             if (ident == "print")
             {
                 Debug.WriteLine("AAAAAAAAAAAAAAAAAAAA");
-                Debug.WriteLine("Print "  + Convert.ToString(paramss[0]?.Evaluate(executionContext)));
-                print(Convert.ToString(paramss[0].Evaluate(executionContext)));
+                object tmp = paramss[0]?.Evaluate(executionContext);
+                Debug.WriteLine("Print "  + Convert.ToString(tmp));
+                print(Convert.ToString(tmp));
                 return null;
             }
             if (ident == "read")

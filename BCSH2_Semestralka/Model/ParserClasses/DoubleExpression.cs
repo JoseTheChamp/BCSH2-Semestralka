@@ -16,9 +16,9 @@ namespace BCSH2_Semestralka.Model.ParserClasses
 
         public override object Evaluate(MyExecutionContext executionContext)
         {
-            string sd = Value.ToString();
-            sd = sd.Replace('.', ',');
-            return Convert.ToDouble(sd);
+            //string sd = Value.ToString();
+            //sd = sd.Replace('.', ',');
+            return Convert.ToDouble(Value);
         }
     }
 }

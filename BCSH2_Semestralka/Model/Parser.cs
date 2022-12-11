@@ -497,7 +497,7 @@ namespace BCSH2_Semestralka.Model
                         {
                             definitionStatement.DataType = DataType.Double;
                             string strDouble = Pop().Value;
-                            strDouble = strDouble.Replace('.',',');
+                            //strDouble = strDouble.Replace('.',',');
                             definitionStatement.Value = Convert.ToDouble(strDouble);
                         }
                         else {
